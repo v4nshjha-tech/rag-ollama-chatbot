@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAG AI | Intelligent PDF Assistant</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg: #080d1a;
+    --card: #111a2d;
+    --card-light: #18243b;
+    --primary: #6366f1;
+    --secondary: #8b5cf6;
+    --text: #f8fafc;
+    --muted: #94a3b8;
+    --border: rgba(148,163,184,0.13);
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background:
+        radial-gradient(ellipse at 10% 10%, rgba(99,102,241,.14), transparent 35%),
+        radial-gradient(ellipse at 90% 80%, rgba(139,92,246,.12), transparent 35%),
+        var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+}
+
+/* NAVBAR */
+
+.navbar {
+    height: 75px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 8%;
+    border-bottom: 1px solid var(--border);
+    background: rgba(8,13,26,.75);
+    backdrop-filter: blur(16px);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 21px;
+    font-weight: 800;
+    letter-spacing: -.7px;
+}
+
+.logo-icon {
+    width: 39px;
+    height: 39px;
+    display: grid;
+    place-items: center;
+    border-radius: 12px;
+    background: linear-gradient(135deg,var(--primary),var(--secondary));
+    font-size: 20px;
+}
+
+.logo span {
+    color: #a5b4fc;
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.online-dot {
+    width: 8px;
+    height: 8px;
+    background: #22c55e;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #22c55e;
+}
+
+/* MAIN */
+
+.container {
+    width: min(1000px, 90%);
+    margin: 65px auto;
+}
+
+.hero {
+    text-align: center;
+    margin-bottom: 45px;
+}
+
+.badge {
+    display: inline-block;
+    padding: 8px 15px;
+    border: 1px solid rgba(129,140,248,.3);
+    background: rgba(99,102,241,.12);
+    color: #c4b5fd;
+    border-radius: 30px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.hero h1 {
+    font-size: clamp(32px,5vw,48px);
+    line-height: 1.15;
+    letter-spacing: -2px;
+    margin-bottom: 16px;
+}
+
+.gradient-text {
+    background: linear-gradient(90deg,#818cf8,#c084fc);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.hero p {
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+/* CARDS */
+
+.card {
+    background: rgba(17,26,45,.88);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 28px;
+    margin-bottom: 25px;
+    box-shadow: 0 15px 50px rgba(0,0,0,.2);
+    backdrop-filter: blur(15px);
+}
+
+.card-heading {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    margin-bottom: 22px;
+}
+
+.heading-icon {
+    width: 43px;
+    height: 43px;
+    border-radius: 13px;
+    display: grid;
+    place-items: center;
+    background: rgba(99,102,241,.15);
+    font-size: 21px;
+}
+
+.card-heading h2 {
+    font-size: 19px;
+}
+
+.card-heading p {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+/* UPLOAD */
+
+.upload-area {
+    border: 1.5px dashed rgba(129,140,248,.4);
+    border-radius: 16px;
+    padding: 35px 20px;
+    text-align: center;
+    background: rgba(99,102,241,.045);
+    transition: .3s;
+}
+
+.upload-area:hover {
+    border-color: #818cf8;
+    background: rgba(99,102,241,.09);
+}
+
+.upload-icon {
+    font-size: 38px;
+    margin-bottom: 13px;
+}
+
+.upload-area h3 {
+    font-size: 15px;
+    margin-bottom: 8px;
+}
+
+.upload-area p {
+    color: var(--muted);
+    font-size: 12px;
+    margin-bottom: 20px;
+}
+
+.file-input {
+    display: none;
+}
+
+.choose-btn {
+    display: inline-block;
+    padding: 11px 20px;
+    background: rgba(99,102,241,.17);
+    color: #c7d2fe;
+    border: 1px solid rgba(129,140,248,.4);
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.file-name {
+    color: #a5b4fc;
+    font-size: 12px;
+    margin-top: 15px;
+    word-break: break-all;
+}
+
+/* BUTTONS */
+
+button {
+    font-family: inherit;
+}
+
+.primary-btn {
+    border: none;
+    padding: 13px 23px;
+    border-radius: 10px;
+    color: white;
+    font-size: 13px;
+    font-weight: 700;
+    background: linear-gradient(110deg,#6366f1,#8b5cf6);
+    cursor: pointer;
+    transition: .25s;
+    box-shadow: 0 5px 20px rgba(99,102,241,.2);
+}
+
+.primary-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(99,102,241,.35);
+}
+
+.primary-btn:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.upload-action {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+/* STATUS */
+
+#status {
+    font-size: 13px;
+    margin-top: 18px;
+    text-align: center;
+    color: var(--muted);
+    line-height: 1.6;
+}
+
+.success {
+    color: #4ade80 !important;
+}
+
+.error {
+    color: #fb7185 !important;
+}
+
+/* CHAT */
+
+.chat-card {
+    min-height: 360px;
+}
+
+.chat-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 23px;
+}
+
+.chat-status {
+    font-size: 11px;
+    color: #4ade80;
+    background: rgba(34,197,94,.1);
+    padding: 7px 11px;
+    border-radius: 20px;
+}
+
+.quick-prompts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    margin-bottom: 20px;
+}
+
+.prompt-chip {
+    padding: 9px 13px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,.035);
+    color: #cbd5e1;
+    font-size: 11px;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.prompt-chip:hover {
+    border-color: #818cf8;
+    color: white;
+}
+
+.chat-input {
+    display: flex;
+    gap: 12px;
+    padding: 8px;
+    background: #0b1222;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+}
+
+.chat-input input {
+    flex: 1;
+    min-width: 0;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: white;
+    padding: 10px;
+    font-size: 13px;
+}
+
+.chat-input input::placeholder {
+    color: #64748b;
+}
+
+.chat-input button {
+    padding: 11px 20px;
+}
+
+/* ANSWER */
+
+.answer-box {
+    margin-top: 24px;
+    padding: 22px;
+    border-radius: 15px;
+    background: #0b1222;
+    border: 1px solid var(--border);
+    line-height: 1.8;
+    font-size: 13px;
+    color: #dbe4f0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    min-height: 75px;
+}
+
+.answer-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #a5b4fc;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.empty-state {
+    color: #64748b;
+    text-align: center;
+    padding: 10px 0;
+}
+
+/* FOOTER */
+
+.footer {
+    text-align: center;
+    padding: 30px 15px;
+    color: #64748b;
+    font-size: 12px;
+}
+
+.footer span {
+    color: #a5b4fc;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:600px) {
+    .navbar {
+        padding: 0 5%;
+        height: 65px;
+    }
+
+    .logo {
+        font-size: 17px;
+    }
+
+    .container {
+        margin: 40px auto;
+        width: 92%;
+    }
+
+    .hero {
+        margin-bottom: 30px;
+    }
+
+    .card {
+        padding: 19px;
+    }
+
+    .chat-input {
+        flex-direction: column;
+    }
+
+    .chat-input button {
+        width: 100%;
+    }
+
+    .nav-right {
+        font-size: 11px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+    <div class="logo">
+        <div class="logo-icon">✦</div>
+        RAG <span>AI</span>
+    </div>
+
+    <div class="nav-right">
+        <div class="online-dot"></div>
+        Local AI System
+    </div>
+</nav>
+
+<main class="container">
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="badge">✦ INTELLIGENT DOCUMENT ASSISTANT</div>
+
+        <h1>
+            Your PDFs, <span class="gradient-text">understood.</span>
+        </h1>
+
+        <p>
+            Upload your documents, ask questions, and get intelligent
+            answers powered by local AI.
+        </p>
+    </section>
+
+    <!-- UPLOAD CARD -->
+    <section class="card">
+
+        <div class="card-heading">
+            <div class="heading-icon">📄</div>
+
+            <div>
+                <h2>Upload your document</h2>
+                <p>Upload a PDF to start your AI conversation.</p>
+            </div>
+        </div>
+
+        <div class="upload-area">
+
+            <div class="upload-icon">☁️</div>
+
+            <h3>Select your PDF document</h3>
+
+            <p>PDF files only · Maximum size 20 MB</p>
+
+            <input
+                type="file"
+                id="pdfFile"
+                class="file-input"
+                accept=".pdf,application/pdf"
+            >
+
+            <label for="pdfFile" class="choose-btn">
+                Browse files
+            </label>
+
+            <div class="file-name" id="fileName">
+                No file selected
+            </div>
+
+        </div>
+
+        <div class="upload-action">
+            <button class="primary-btn" id="uploadBtn">
+                ↑ Upload & Process PDF
+            </button>
+        </div>
+
+        <div id="status">
+            Your document will be processed locally.
+        </div>
+
+    </section>
+
+    <!-- CHAT CARD -->
+    <section class="card chat-card">
+
+        <div class="chat-top">
+
+            <div class="card-heading" style="margin:0">
+                <div class="heading-icon">💬</div>
+
+                <div>
+                    <h2>Chat with your PDF</h2>
+                    <p>Ask anything about your uploaded document.</p>
+                </div>
+            </div>
+
+            <div class="chat-status">● AI Assistant</div>
+
+        </div>
+
+        <div class="quick-prompts">
+            <button class="prompt-chip" data-question="Summarize this PDF">
+                ✨ Summarize PDF
+            </button>
+
+            <button class="prompt-chip" data-question="Explain the important topics">
+                📚 Important topics
+            </button>
+
+            <button class="prompt-chip" data-question="Generate important exam questions">
+                🎯 Exam questions
+            </button>
+        </div>
+
+        <div class="chat-input">
+
+            <input
+                type="text"
+                id="question"
+                placeholder="Ask something about your PDF..."
+                autocomplete="off"
+                disabled
+            >
+
+            <button class="primary-btn" id="askBtn" disabled>
+                Ask AI →
+            </button>
+
+        </div>
+
+        <div class="answer-box" id="answer">
+            <div class="empty-state">
+                ✦ Your AI assistant is ready.<br><br>
+                Upload a PDF to begin your conversation.
+            </div>
+        </div>
+
+    </section>
+
+</main>
+
+<footer class="footer">
+    Powered by <span>Ollama · Qwen 2.5 · RAG</span>
+    <br><br>
+    Your documents stay on your local system.
+</footer>
+
+
+<script>
+const pdfFile = document.getElementById("pdfFile");
+const uploadBtn = document.getElementById("uploadBtn");
+const statusBox = document.getElementById("status");
+const fileName = document.getElementById("fileName");
+
+const askBtn = document.getElementById("askBtn");
+const question = document.getElementById("question");
+const answer = document.getElementById("answer");
+
+let isUploaded = false;
+
+
+// Select PDF
+pdfFile.addEventListener("change", () => {
+
+    const file = pdfFile.files[0];
+
+    if (!file) {
+        fileName.textContent = "No file selected";
+        return;
+    }
+
+    fileName.textContent = "📄 " + file.name;
+
+    if (file.type !== "application/pdf") {
+        statusBox.textContent = "Please select a valid PDF file.";
+        statusBox.className = "error";
+        return;
+    }
+
+    if (file.size > 20 * 1024 * 1024) {
+        statusBox.textContent = "File size must be below 20 MB.";
+        statusBox.className = "error";
+        return;
+    }
+
+    statusBox.textContent = "PDF selected. Ready to upload.";
+    statusBox.className = "";
+});
+
+
+// Upload PDF
+uploadBtn.addEventListener("click", async () => {
+
+    const file = pdfFile.files[0];
+
+    if (!file) {
+        statusBox.textContent = "Please select a PDF first.";
+        statusBox.className = "error";
+        return;
+    }
+
+    if (file.type !== "application/pdf" ||
+        file.size > 20 * 1024 * 1024) {
+        statusBox.textContent = "Please select a valid PDF under 20 MB.";
+        statusBox.className = "error";
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("pdf", file);
+
+    uploadBtn.disabled = true;
+    uploadBtn.textContent = "Processing document...";
+    statusBox.textContent = "⏳ Extracting text and generating embeddings...";
+    statusBox.className = "";
+
+    isUploaded = false;
+    askBtn.disabled = true;
+    question.disabled = true;
+
+    try {
+
+        const response = await fetch("/upload", {
+            method: "POST",
+            body: formData
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || "Upload failed.");
+        }
+
+        isUploaded = true;
+
+        statusBox.textContent =
+            "✓ PDF processed successfully! Pages: " +
+            data.pages +
+            " · Chunks: " +
+            data.totalChunks;
+
+        statusBox.className = "success";
+
+        askBtn.disabled = false;
+        question.disabled = false;
+
+        answer.textContent =
+            "Your document is ready! Ask your first question.";
+
+    } catch (error) {
+
+        statusBox.textContent = "✕ " + error.message;
+        statusBox.className = "error";
+
+    } finally {
+
+        uploadBtn.disabled = false;
+        uploadBtn.textContent = "↑ Upload & Process PDF";
+
+    }
+});
+
+
+// Ask AI
+async function askAI() {
+
+    const message = question.value.trim();
+
+    if (!message) {
+        return;
+    }
+
+    if (!isUploaded) {
+        answer.textContent = "Please upload a PDF first.";
+        return;
+    }
+
+    askBtn.disabled = true;
+    askBtn.textContent = "Thinking...";
+
+    answer.textContent =
+        "✦ AI is searching your document and preparing an answer...";
+
+    try {
+
+        const response = await fetch("/chat", {
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                message: message
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || "AI request failed.");
+        }
+
+        answer.textContent = data.answer;
+
+        question.value = "";
+
+    } catch (error) {
+
+        answer.textContent = "Error: " + error.message;
+
+    } finally {
+
+        askBtn.disabled = false;
+        askBtn.textContent = "Ask AI →";
+
+    }
+}
+
+askBtn.addEventListener("click", askAI);
+
+question.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" && !askBtn.disabled) {
+        askAI();
+    }
+});
+
+
+// Quick question buttons
+document.querySelectorAll(".prompt-chip").forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        question.value = button.dataset.question;
+        question.focus();
+
+    });
+
+});
+</script>
+
+</body>
+</html>
