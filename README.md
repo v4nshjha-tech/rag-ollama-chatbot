@@ -160,8 +160,4 @@ Computer Science Student | Aspiring Software Developer
 
 ---
 
-<p align="center">
-  <b>Built with passion, curiosity, and AI. ✦</b>
-  <br>
-  ⭐ If you find this project interesting, consider giving it a star!
-</p>
+
