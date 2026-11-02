@@ -74,4 +74,94 @@ rag-ollama-chatbot/
 
 ## ⚙️ Installation & Setup
 
-### Prerequ
+### Prerequisites
+
+* Node.js
+* npm
+* Ollama
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/v4nshjha-tech/rag-ollama-chatbot.git
+```
+
+### 2. Navigate to the Project
+
+```bash
+cd rag-ollama-chatbot
+```
+
+### 3. Install Dependencies
+
+```bash
+npm install
+```
+
+### 4. Install Ollama Models
+
+```bash
+ollama pull qwen2.5:1.5b
+ollama pull nomic-embed-text
+```
+
+### 5. Start Ollama
+
+```bash
+ollama serve
+```
+
+If Ollama is already running in the background, you can skip this step.
+
+### 6. Start the Backend
+
+Open another terminal and run:
+
+```bash
+node server.js
+```
+
+### 7. Open the Application
+
+Visit:
+
+```text
+http://localhost:3000
+```
+
+Your RAG AI PDF Assistant is ready!
+
+## 🔮 Future Improvements
+
+* Support for multiple PDF documents.
+* Persistent vector database integration.
+* OCR support for scanned PDFs.
+* Streaming AI responses.
+* User authentication and document management.
+* Improved response speed and retrieval accuracy.
+* Cloud deployment and public access.
+
+## ⚠️ Current Limitations
+
+* Currently processes one active PDF at a time.
+* Document embeddings are stored in server memory.
+* Restarting the backend clears the indexed document.
+* Requires Ollama and the configured AI models to be running locally.
+* Scanned PDFs without extractable text are not currently supported.
+
+## 👨‍💻 Developer
+
+**Vansh Jha**
+
+Computer Science Student | Aspiring Software Developer
+
+* GitHub: [@v4nshjha-tech](https://github.com/v4nshjha-tech)
+* LinkedIn: [Vansh Jha](https://www.linkedin.com/in/vansh-jha-318a09338)
+
+---
+
+<p align="center">
+  <b>Built with passion, curiosity, and AI. ✦</b>
+  <br>
+  ⭐ If you find this project interesting, consider giving it a star!
+</p>
